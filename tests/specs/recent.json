@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/recent",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Show recently completed matches"
+            }
+          }
+        ],
+        "send": {
+          "text": "/recent"
+        }
+      }
+    ]
+  }
+]
