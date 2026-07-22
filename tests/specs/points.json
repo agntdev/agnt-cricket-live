@@ -1,19 +1,15 @@
 [
   {
-    "name": "/points",
+    "name": "/points shows standings",
     "steps": [
       {
+        "send": { "text": "/points" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Show tournament standings"
-            }
+            "payload": { "text": "No standings available." }
           }
-        ],
-        "send": {
-          "text": "/points"
-        }
+        ]
       }
     ]
   }

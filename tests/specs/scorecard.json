@@ -1,19 +1,15 @@
 [
   {
-    "name": "/scorecard",
+    "name": "/scorecard prompts for match ID",
     "steps": [
       {
+        "send": { "text": "/scorecard" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Get full scorecard for a match or team"
-            }
+            "payload": { "text": "Which match scorecard would you like? Send /scorecard followed by a match ID." }
           }
-        ],
-        "send": {
-          "text": "/scorecard"
-        }
+        ]
       }
     ]
   }

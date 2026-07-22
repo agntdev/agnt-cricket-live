@@ -1,15 +1,37 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { getMatches, formatMatchLine } from "../cricbuzz.js";
+import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
+const composer = new Composer<Ctx>();
 
-const composer = new Composer();
+async function showLive(ctx: Ctx) {
+  await ctx.replyWithChatAction("typing");
+  const matches = await getMatches("live");
+  if (matches.length === 0) {
+    await ctx.reply("No live matches right now. Check back soon!", {
+      reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
+    });
+    return;
+  }
+  const lines = matches.slice(0, 10).map((m, i) => {
+    const followBtn = inlineButton("🔔 Follow", `follow:${m.matchId}`);
+    return `${i + 1}. ${formatMatchLine(m)}`;
+  });
+  const kb = matches.slice(0, 10).flatMap((m) => [
+    [inlineButton(`${m.team1.shortName} vs ${m.team2.shortName}`, `score:${m.matchId}`)],
+  ]);
+  kb.push([inlineButton("⬅️ Back to menu", "menu:main")]);
+  await ctx.reply(`<b>Live matches</b>\n\n${lines.join("\n\n")}`, {
+    parse_mode: "HTML",
+    reply_markup: inlineKeyboard(kb),
+  });
+}
 
-composer.command("live", async (ctx) => {
-  await ctx.reply("List currently live matches");
+composer.command("live", showLive);
+composer.callbackQuery("live:show", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  await showLive(ctx);
 });
 
 export default composer;

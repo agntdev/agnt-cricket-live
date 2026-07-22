@@ -1,15 +1,53 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { getCommentary, formatCommentary } from "../cricbuzz.js";
+import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
+const composer = new Composer<Ctx>();
 
-const composer = new Composer();
+async function showCommentary(ctx: Ctx, matchId?: string) {
+  if (!matchId) {
+    await ctx.reply("Which match commentary would you like? Send /commentary followed by a match ID.", {
+      reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
+    });
+    return;
+  }
+  await ctx.replyWithChatAction("typing");
+  const data = await getCommentary(matchId);
+  if (!data) {
+    await ctx.reply("Couldn't load commentary for that match. Try again later.", {
+      reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
+    });
+    return;
+  }
+  const text = formatCommentary(data);
+  await ctx.reply(`<b>Ball-by-ball commentary</b>\n\n${text}`, {
+    parse_mode: "HTML",
+    reply_markup: inlineKeyboard([
+      [inlineButton("🔄 Refresh", `commentary:${matchId}`)],
+      [inlineButton("⬅️ Back to menu", "menu:main")],
+    ]),
+  });
+}
 
 composer.command("commentary", async (ctx) => {
-  await ctx.reply("Get ball-by-ball commentary for a match");
+  const text = ctx.message?.text ?? "";
+  const parts = text.split(/\s+/);
+  const matchId = parts.length > 1 ? parts[1] : undefined;
+  await showCommentary(ctx, matchId);
+});
+
+composer.callbackQuery(/^commentary:(.+)$/, async (ctx) => {
+  await ctx.answerCallbackQuery();
+  const matchId = ctx.match?.[1];
+  if (matchId) await showCommentary(ctx, matchId);
+});
+
+composer.callbackQuery("commentary:show", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  await ctx.reply("Send /commentary followed by a match ID to view ball-by-ball commentary.", {
+    reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
+  });
 });
 
 export default composer;

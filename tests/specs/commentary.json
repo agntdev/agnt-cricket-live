@@ -1,19 +1,15 @@
 [
   {
-    "name": "/commentary",
+    "name": "/commentary prompts for match ID",
     "steps": [
       {
+        "send": { "text": "/commentary" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Get ball-by-ball commentary for a match"
-            }
+            "payload": { "text": "Which match commentary would you like? Send /commentary followed by a match ID." }
           }
-        ],
-        "send": {
-          "text": "/commentary"
-        }
+        ]
       }
     ]
   }

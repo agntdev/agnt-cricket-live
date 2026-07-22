@@ -1,19 +1,15 @@
 [
   {
-    "name": "/schedule",
+    "name": "/schedule shows match schedule",
     "steps": [
       {
+        "send": { "text": "/schedule" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "List matches by date/tournament"
-            }
+            "payload": { "text": "No matches scheduled." }
           }
-        ],
-        "send": {
-          "text": "/schedule"
-        }
+        ]
       }
     ]
   }

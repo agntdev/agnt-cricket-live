@@ -1,19 +1,15 @@
 [
   {
-    "name": "Follow",
+    "name": "Follow button shows empty state",
     "steps": [
       {
+        "send": { "callback": "follow:match" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Follow a match to receive notifications"
-            }
+            "payload": { "text": "You're not following any matches yet. Open a live match and tap Follow to get started." }
           }
-        ],
-        "send": {
-          "callback": "follow:match"
-        }
+        ]
       }
     ]
   }

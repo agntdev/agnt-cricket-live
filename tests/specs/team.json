@@ -1,19 +1,15 @@
 [
   {
-    "name": "/team",
+    "name": "/team prompts for team name",
     "steps": [
       {
+        "send": { "text": "/team" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Get team information and squad details"
-            }
+            "payload": { "text": "Which team are you looking for? Send /team followed by a team name." }
           }
-        ],
-        "send": {
-          "text": "/team"
-        }
+        ]
       }
     ]
   }
