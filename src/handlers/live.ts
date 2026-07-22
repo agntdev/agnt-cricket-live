@@ -1,13 +1,15 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
-import { getMatches, formatMatchLine } from "../cricbuzz.js";
+import { getProvider } from "../providers/index.js";
+import { formatCanonicalMatchLine } from "../providers/format.js";
 import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
 const composer = new Composer<Ctx>();
 
 async function showLive(ctx: Ctx) {
   await ctx.replyWithChatAction("typing");
-  const matches = await getMatches("live");
+  const provider = getProvider();
+  const matches = await provider.getMatches("live");
   if (matches.length === 0) {
     await ctx.reply("No live matches right now. Check back soon!", {
       reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
@@ -15,8 +17,7 @@ async function showLive(ctx: Ctx) {
     return;
   }
   const lines = matches.slice(0, 10).map((m, i) => {
-    const followBtn = inlineButton("🔔 Follow", `follow:${m.matchId}`);
-    return `${i + 1}. ${formatMatchLine(m)}`;
+    return `${i + 1}. ${formatCanonicalMatchLine(m)}`;
   });
   const kb = matches.slice(0, 10).flatMap((m) => [
     [inlineButton(`${m.team1.shortName} vs ${m.team2.shortName}`, `score:${m.matchId}`)],

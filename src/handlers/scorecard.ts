@@ -1,6 +1,7 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
-import { getScorecard, getMatchDetail, formatScorecard } from "../cricbuzz.js";
+import { getProvider } from "../providers/index.js";
+import { formatCanonicalScorecard } from "../providers/format.js";
 import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
 const composer = new Composer<Ctx>();
@@ -13,15 +14,16 @@ async function showScorecard(ctx: Ctx, matchId?: string) {
     return;
   }
   await ctx.replyWithChatAction("typing");
-  const detail = await getMatchDetail(matchId);
+  const provider = getProvider();
+  const detail = await provider.getMatchDetail(matchId);
   if (!detail) {
     await ctx.reply("Couldn't find that match. Check the match ID and try again.", {
       reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
     });
     return;
   }
-  const sc = await getScorecard(matchId);
-  const scorecardText = sc ? formatScorecard(sc) : detail.status;
+  const sc = await provider.getScorecard(matchId);
+  const scorecardText = sc ? formatCanonicalScorecard(sc) : detail.status;
   const header = `${detail.team1.shortName} vs ${detail.team2.shortName}`;
   await ctx.reply(`<b>${header}</b>\n\n${scorecardText}`, {
     parse_mode: "HTML",

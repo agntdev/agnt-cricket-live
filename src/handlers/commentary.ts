@@ -1,6 +1,7 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
-import { getCommentary, formatCommentary } from "../cricbuzz.js";
+import { getProvider } from "../providers/index.js";
+import { formatCanonicalCommentary } from "../providers/format.js";
 import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
 const composer = new Composer<Ctx>();
@@ -13,14 +14,15 @@ async function showCommentary(ctx: Ctx, matchId?: string) {
     return;
   }
   await ctx.replyWithChatAction("typing");
-  const data = await getCommentary(matchId);
+  const provider = getProvider();
+  const data = await provider.getCommentary(matchId);
   if (!data) {
     await ctx.reply("Couldn't load commentary for that match. Try again later.", {
       reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
     });
     return;
   }
-  const text = formatCommentary(data);
+  const text = formatCanonicalCommentary(data);
   await ctx.reply(`<b>Ball-by-ball commentary</b>\n\n${text}`, {
     parse_mode: "HTML",
     reply_markup: inlineKeyboard([

@@ -1,6 +1,6 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
-import { getMatchDetail } from "../cricbuzz.js";
+import { getProvider } from "../providers/index.js";
 import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
 const composer = new Composer<Ctx>();
@@ -59,7 +59,8 @@ composer.callbackQuery(/^follow:(.+)$/, async (ctx) => {
   followed.push(matchId);
   session.followedMatches = followed;
 
-  const detail = await getMatchDetail(matchId);
+  const provider = getProvider();
+  const detail = await provider.getMatchDetail(matchId);
   const matchName = detail
     ? `${detail.team1.shortName} vs ${detail.team2.shortName}`
     : `Match #${matchId}`;
