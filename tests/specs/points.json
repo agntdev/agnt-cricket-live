@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/points",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Show tournament standings"
+            }
+          }
+        ],
+        "send": {
+          "text": "/points"
+        }
+      }
+    ]
+  }
+]
