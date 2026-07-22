@@ -1,11 +1,12 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
-import { searchTeams, getTeamInfo, type TeamInfo } from "../cricbuzz.js";
+import { getProvider } from "../providers/index.js";
+import type { CanonicalTeamInfo } from "../providers/types.js";
 import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
 const composer = new Composer<Ctx>();
 
-function formatTeam(t: TeamInfo): string {
+function formatTeam(t: CanonicalTeamInfo): string {
   const lines = [`<b>${t.teamName}</b>`];
   if (t.squad && t.squad.length > 0) {
     lines.push(`\nSquad (${t.squad.length}):`);
@@ -32,7 +33,8 @@ async function showTeam(ctx: Ctx, query?: string) {
     return;
   }
   await ctx.replyWithChatAction("typing");
-  const teams = await searchTeams(query);
+  const provider = getProvider();
+  const teams = await provider.searchTeams(query);
   if (teams.length === 0) {
     await ctx.reply("Couldn't find that team. Try a different name.", {
       reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),

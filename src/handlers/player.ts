@@ -1,11 +1,12 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
-import { searchPlayer, type PlayerProfile } from "../cricbuzz.js";
+import { getProvider } from "../providers/index.js";
+import type { CanonicalPlayerProfile } from "../providers/types.js";
 import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
 const composer = new Composer<Ctx>();
 
-function formatPlayer(p: PlayerProfile): string {
+function formatPlayer(p: CanonicalPlayerProfile): string {
   const lines = [`<b>${p.playerName}</b>`];
   if (p.country) lines.push(`🌍 ${p.country}`);
   if (p.playerType) lines.push(`🏏 ${p.playerType}`);
@@ -22,7 +23,8 @@ async function showPlayer(ctx: Ctx, query?: string) {
     return;
   }
   await ctx.replyWithChatAction("typing");
-  const players = await searchPlayer(query);
+  const provider = getProvider();
+  const players = await provider.searchPlayer(query);
   if (players.length === 0) {
     await ctx.reply("Couldn't find that player. Try a different name.", {
       reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),

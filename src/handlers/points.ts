@@ -1,14 +1,16 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
-import { getPointsTable, formatPointsTable } from "../cricbuzz.js";
+import { getProvider } from "../providers/index.js";
+import { formatCanonicalPointsTable } from "../providers/format.js";
 import { inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
 const composer = new Composer<Ctx>();
 
 async function showPoints(ctx: Ctx) {
   await ctx.replyWithChatAction("typing");
-  const entries = await getPointsTable();
-  const text = formatPointsTable(entries);
+  const provider = getProvider();
+  const entries = await provider.getPointsTable();
+  const text = formatCanonicalPointsTable(entries);
   await ctx.reply(text, {
     parse_mode: "HTML",
     reply_markup: inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]),
