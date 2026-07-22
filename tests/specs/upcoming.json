@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/upcoming",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Show upcoming matches"
+            }
+          }
+        ],
+        "send": {
+          "text": "/upcoming"
+        }
+      }
+    ]
+  }
+]
