@@ -1,19 +1,15 @@
 [
   {
-    "name": "/upcoming",
+    "name": "/upcoming shows upcoming matches",
     "steps": [
       {
+        "send": { "text": "/upcoming" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Show upcoming matches"
-            }
+            "payload": { "text": "No upcoming matches scheduled. Check back later!" }
           }
-        ],
-        "send": {
-          "text": "/upcoming"
-        }
+        ]
       }
     ]
   }

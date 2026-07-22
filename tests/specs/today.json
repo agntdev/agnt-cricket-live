@@ -1,19 +1,15 @@
 [
   {
-    "name": "/today",
+    "name": "/today shows today's matches",
     "steps": [
       {
+        "send": { "text": "/today" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Show today's matches"
-            }
+            "payload": { "text": "No matches scheduled for today. Check back later!" }
           }
-        ],
-        "send": {
-          "text": "/today"
-        }
+        ]
       }
     ]
   }

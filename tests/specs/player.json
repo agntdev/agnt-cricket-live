@@ -1,19 +1,15 @@
 [
   {
-    "name": "/player",
+    "name": "/player prompts for player name",
     "steps": [
       {
+        "send": { "text": "/player" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Search for player profiles and stats"
-            }
+            "payload": { "text": "Which player are you looking for? Send /player followed by a name." }
           }
-        ],
-        "send": {
-          "text": "/player"
-        }
+        ]
       }
     ]
   }

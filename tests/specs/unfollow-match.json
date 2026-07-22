@@ -1,19 +1,15 @@
 [
   {
-    "name": "Unfollow",
+    "name": "Unfollow button shows empty state",
     "steps": [
       {
+        "send": { "callback": "unfollow:match" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "Stop following a match"
-            }
+            "payload": { "text": "You're not following any matches. Nothing to unfollow." }
           }
-        ],
-        "send": {
-          "callback": "unfollow:match"
-        }
+        ]
       }
     ]
   }

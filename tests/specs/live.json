@@ -1,19 +1,15 @@
 [
   {
-    "name": "/live",
+    "name": "/live shows live matches",
     "steps": [
       {
+        "send": { "text": "/live" },
         "expect": [
           {
             "method": "sendMessage",
-            "payload": {
-              "text": "List currently live matches"
-            }
+            "payload": { "text": "No live matches right now. Check back soon!" }
           }
-        ],
-        "send": {
-          "text": "/live"
-        }
+        ]
       }
     ]
   }
