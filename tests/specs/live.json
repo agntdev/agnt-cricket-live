@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/live",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "List currently live matches"
+            }
+          }
+        ],
+        "send": {
+          "text": "/live"
+        }
+      }
+    ]
+  }
+]
